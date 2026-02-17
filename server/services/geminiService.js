@@ -82,9 +82,8 @@ function analyzeAnswer(question, answer) {
     conceptGaps.push("Explain why these concepts matter in real usage.");
   }
 
-  // For fallback, we cannot provide the exact answer without AI
-  // This will be overridden by Gemini's response
-  const betterAnswer = "[Gemini will provide the exact answer here]";
+  // For fallback without AI, provide a generic guidance
+  const betterAnswer = "Please provide a clear definition, explain the concept step-by-step, and include a concrete example. Make sure to cover all key terms from the question.";
 
   return {
     accuracyPercent: Math.round(accuracyPercent),
