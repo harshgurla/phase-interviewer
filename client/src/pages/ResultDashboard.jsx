@@ -52,6 +52,39 @@ const ResultDashboard = ({ onBack }) => {
           {onBack && <button className="ghost" onClick={onBack}>← Back</button>}
         </div>
       </div>
+      
+      {/* Overall Performance */}
+      <div className="overall-performance">
+        <div className="performance-circle">
+          <svg viewBox="0 0 100 100" className="circular-progress">
+            <defs>
+              <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#38bdf8" />
+                <stop offset="100%" stopColor="#6366f1" />
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" className="progress-bg" />
+            <circle 
+              cx="50" 
+              cy="50" 
+              r="45" 
+              className="progress-bar"
+              style={{
+                strokeDasharray: `${(fullResult.scores?.total || 0) * 2.83} 283`,
+                strokeDashoffset: 0
+              }}
+            />
+          </svg>
+          <div className="performance-text">
+            <span className="performance-score">{fullResult.scores?.total || 0}</span>
+            <span className="performance-label">/ 100</span>
+          </div>
+        </div>
+        <div className="performance-info">
+          <h3>Overall Performance</h3>
+          <p className="muted">Level: <strong className="level-badge">{fullResult.level}</strong></p>
+        </div>
+      </div>
       <ScoreBreakdown scores={fullResult.scores} level={fullResult.level} />
       <FeedbackPanel answers={fullResult.answers || []} />
       <div className="summary-card">

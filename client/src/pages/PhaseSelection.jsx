@@ -19,8 +19,28 @@ const PhaseSelection = ({ onNext }) => {
   } = useSession();
   const [selected, setSelected] = useState(PHASES[0].id);
   const [error, setError] = useState("");
+  const [phaseProgress, setPhaseProgress] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // Fetch phase progress when component mounts
+  React.useEffect(() => {
+    api.get("/session/my-results")
+      .then(response => {
+        const progress = {};
+        response.data.forEach(session => {
+          if (!progress[session.phase]) {
+            progress[session.phase] = 0;
+          }
+          progress[session.phase]++;
+        });
+        setPhaseProgress(progress);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleStart = async () => {
+    setLoading(true);
+    setError("");
     try {
       const response = await api.post("/session/start", {
         phaseId: selected
@@ -29,11 +49,15 @@ const PhaseSelection = ({ onNext }) => {
       setSessionId(response.data.sessionId);
       setQuestions(response.data.questions || []);
       setCurrentQuestionIndex(0);
+      setLoading(false);
       onNext();
     } catch (err) {
       setError(err.response?.data?.error || "Unable to start session");
+      setLoading(false);
     }
   };
+
+  const currentPhaseCount = phaseProgress[selected] || 0;
 
   return (
     <div className="card">
@@ -46,8 +70,15 @@ const PhaseSelection = ({ onNext }) => {
           </option>
         ))}
       </select>
+      {currentPhaseCount > 0 && (
+        <p className="muted" style={{ marginTop: "0.5rem" }}>
+          📊 You've completed this phase <strong>{currentPhaseCount}</strong> time{currentPhaseCount > 1 ? 's' : ''}
+        </p>
+      )}
       {error && <p className="error">{error}</p>}
-      <button onClick={handleStart}>Start Challenge</button>
+      <button onClick={handleStart} disabled={loading}>
+        {loading ? "Starting..." : "Start Challenge"}
+      </button>
     </div>
   );
 };
