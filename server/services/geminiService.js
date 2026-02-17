@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 function extractPromptDetails(prompt = "") {
   const questionMatch = prompt.match(/Question:\s*([\s\S]*?)\nStudent Answer:/i);
@@ -115,10 +115,12 @@ function buildFallbackFeedback(prompt, reasonLabel) {
 
 async function callGemini(prompt) {
   if (!process.env.GEMINI_API_KEY) {
+    console.error("❌ Gemini API key is missing");
     return buildFallbackFeedback(prompt, "missing_api_key");
   }
 
   try {
+    console.log("🔄 Calling Gemini API...");
     const response = await axios.post(
       `${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`,
       {
@@ -127,12 +129,27 @@ async function callGemini(prompt) {
     );
 
     const raw = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+    console.log("📦 Raw Gemini response:", raw.substring(0, 200) + "...");
+    
+    // Remove markdown code blocks if present
+    let cleanJson = raw.trim();
+    if (cleanJson.startsWith('```json')) {
+      cleanJson = cleanJson.replace(/```json\n?/g, '').replace(/```\n?$/g, '');
+    } else if (cleanJson.startsWith('```')) {
+      cleanJson = cleanJson.replace(/```\n?/g, '');
+    }
+    
     try {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(cleanJson.trim());
+      console.log("✅ Gemini response parsed successfully");
+      return parsed;
     } catch (error) {
+      console.error("❌ Failed to parse Gemini JSON:", error.message);
+      console.error("Raw response:", raw);
       return buildFallbackFeedback(prompt, "invalid_json");
     }
   } catch (error) {
+    console.error("❌ Gemini API request failed:", error.response?.data || error.message);
     return buildFallbackFeedback(prompt, "request_failed");
   }
 }
