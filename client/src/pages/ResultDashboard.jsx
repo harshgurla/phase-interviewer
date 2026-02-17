@@ -4,7 +4,7 @@ import { useSession } from "../context/SessionContext";
 import ScoreBreakdown from "../components/ScoreBreakdown";
 import FeedbackPanel from "../components/FeedbackPanel";
 
-const ResultDashboard = () => {
+const ResultDashboard = ({ onBack }) => {
   const { sessionId } = useSession();
   const [fullResult, setFullResult] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +47,10 @@ const ResultDashboard = () => {
           <h2>Results & Feedback</h2>
           <p className="muted">Great effort! Here's your progress snapshot.</p>
         </div>
-        {fullResult?.phase && <span className="pill">{fullResult.phase}</span>}
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          {fullResult?.phase && <span className="pill">{fullResult.phase}</span>}
+          {onBack && <button className="ghost" onClick={onBack}>← Back</button>}
+        </div>
       </div>
       <ScoreBreakdown scores={fullResult.scores} level={fullResult.level} />
       <FeedbackPanel answers={fullResult.answers || []} />

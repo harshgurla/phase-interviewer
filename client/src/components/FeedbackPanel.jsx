@@ -71,7 +71,12 @@ const FeedbackPanel = ({ answers }) => {
                     </div>
                   )}
                   {fb.betterAnswer && (
-                    <p className="muted"><strong>How You Could Answer:</strong> {fb.betterAnswer}</p>
+                    <div className="better-answer-section">
+                      <p className="muted"><strong>How You Could Answer:</strong></p>
+                      <div className="better-answer-content">
+                        {fb.betterAnswer}
+                      </div>
+                    </div>
                   )}
                 </div>
               );

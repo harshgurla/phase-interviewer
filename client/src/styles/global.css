@@ -398,6 +398,39 @@ button:hover {
   line-height: 1.5;
 }
 
+.better-answer-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.1);
+  border-left: 3px solid rgba(99, 102, 241, 0.5);
+}
+
+.better-answer-content {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-top: 0.5rem;
+  white-space: pre-line;
+}
+
+@media (min-width: 768px) {
+  .hero-card {
+    align-items: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .hero-card > div {
+    width: 100%;
+  }
+}
+
 pre {
   background: rgba(15, 23, 42, 0.7);
   border-radius: 12px;

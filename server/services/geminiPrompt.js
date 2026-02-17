@@ -14,6 +14,7 @@ Your Task:
 5. Give specific, actionable advice
 
 Evaluation Criteria:
+- Score 0: Empty, "I don't know", completely irrelevant, or nonsensical answer
 - Score 1 (Beginner): Wrong or very incomplete, major gaps
 - Score 2 (Intermediate): Partially correct, some concepts present
 - Score 3 (Advanced): Mostly correct, good understanding, minor gaps
@@ -38,9 +39,10 @@ Feedback Requirements:
 
 **Better Answer (CRITICAL)**: 
 - Write the COMPLETE CORRECT ANSWER to this question
-- Use simple language suitable for beginners
-- Include: clear definition + explanation + real example
-- Make it 4-8 sentences
+- Use VERY SIMPLE language for beginners
+- Format: Definition (1 sentence) + Explanation (2-3 sentences) + Example (1-2 sentences)
+- Keep it 4-6 sentences maximum
+- Use short paragraphs, avoid lengthy blocks of text
 - DO NOT write "[Provide answer here]" or templates - write the actual answer!
 
 **Follow-up Question**: Ask a probing question to deepen understanding (optional)
@@ -55,7 +57,7 @@ Return ONLY valid JSON (no markdown, no extra text):
 {
   "score": 1,
   "level": "Beginner",
-  "accuracyPercent": 35,
+  "accuracyPercent": 25,
   "feedback": {
     "strengths": ["You mentioned HTML tags, showing you know they exist"],
     "improvements": ["Add a clear definition", "Include concrete examples", "Explain why it matters"],

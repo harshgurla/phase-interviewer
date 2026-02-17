@@ -5,6 +5,7 @@ import PhaseSelection from "./pages/PhaseSelection";
 import InterviewSession from "./pages/InterviewSession";
 import ResultDashboard from "./pages/ResultDashboard";
 import AdminResults from "./pages/AdminResults";
+import MyResults from "./pages/MyResults";
 
 const AppShell = () => {
   const [step, setStep] = useState("login");
@@ -25,6 +26,12 @@ const AppShell = () => {
           <div className="hero-actions">
             {isAdmin && (
               <button className="ghost" onClick={() => setStep("admin")}>Admin Results</button>
+            )}
+            {isAuthed && step !== "login" && step !== "phase" && (
+              <button className="ghost" onClick={() => setStep("phase")}>← Back</button>
+            )}
+            {isAuthed && step === "phase" && (
+              <button className="ghost" onClick={() => setStep("myResults")}>My Results</button>
             )}
             {isAuthed && (
               <button className="ghost" onClick={() => { logout(); setStep("login"); }}>
@@ -49,7 +56,8 @@ const AppShell = () => {
       {!isAuthed && step === "login" && <Login onNext={() => setStep("phase")} />}
       {isAuthed && step === "phase" && <PhaseSelection onNext={() => setStep("interview")} />}
       {isAuthed && step === "interview" && <InterviewSession onComplete={() => setStep("result")} />}
-      {isAuthed && step === "result" && <ResultDashboard />}
+      {isAuthed && step === "result" && <ResultDashboard onBack={() => setStep("phase")} />}
+      {isAuthed && step === "myResults" && <MyResults onBack={() => setStep("phase")} />}
       {isAdmin && step === "admin" && <AdminResults onBack={() => setStep("phase")} />}
     </div>
   );

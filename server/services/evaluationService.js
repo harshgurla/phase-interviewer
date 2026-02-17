@@ -5,7 +5,8 @@ async function evaluateAnswer({ phaseTitle, question, rubricCategory, answer }) 
   const prompt = buildEvaluationPrompt({ phaseTitle, question, rubricCategory, answer });
   const result = await callGemini(prompt);
 
-  const score = result.score || 2;
+  // Allow score to be 0, don't default to 2
+  const score = Number.isFinite(result.score) ? result.score : 0;
   const accuracyPercent = Number.isFinite(result.accuracyPercent)
     ? Math.max(0, Math.min(100, result.accuracyPercent))
     : Math.round((score / 4) * 100);

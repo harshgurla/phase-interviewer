@@ -158,3 +158,11 @@ exports.getResult = async (req, res) => {
     completed: session.completed
   });
 };
+
+exports.getMyResults = async (req, res) => {
+  const sessions = await Session.find({ studentId: req.user.id })
+    .sort({ createdAt: -1 })
+    .limit(20);
+  
+  res.json(sessions);
+};
