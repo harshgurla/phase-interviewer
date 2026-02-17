@@ -81,7 +81,6 @@ const PhaseSelection = ({ onNext }) => {
       <button onClick={handleStart} disabled={isStarting}>
         {isStarting ? "Starting..." : "Start Challenge"}
       </button>
-      </button>
     </div>
   );
 };
