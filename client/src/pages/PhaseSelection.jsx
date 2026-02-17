@@ -20,7 +20,7 @@ const PhaseSelection = ({ onNext }) => {
   const [selected, setSelected] = useState(PHASES[0].id);
   const [error, setError] = useState("");
   const [phaseProgress, setPhaseProgress] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
 
   // Fetch phase progress when component mounts
   React.useEffect(() => {
@@ -35,11 +35,14 @@ const PhaseSelection = ({ onNext }) => {
         });
         setPhaseProgress(progress);
       })
-      .catch(() => {});
+      .catch(err => {
+        console.log("Could not fetch phase progress:", err);
+      });
   }, []);
 
   const handleStart = async () => {
-    setLoading(true);
+    if (isStarting) return; // Prevent double clicks
+    setIsStarting(true);
     setError("");
     try {
       const response = await api.post("/session/start", {
@@ -49,11 +52,10 @@ const PhaseSelection = ({ onNext }) => {
       setSessionId(response.data.sessionId);
       setQuestions(response.data.questions || []);
       setCurrentQuestionIndex(0);
-      setLoading(false);
       onNext();
     } catch (err) {
       setError(err.response?.data?.error || "Unable to start session");
-      setLoading(false);
+      setIsStarting(false);
     }
   };
 
@@ -76,8 +78,9 @@ const PhaseSelection = ({ onNext }) => {
         </p>
       )}
       {error && <p className="error">{error}</p>}
-      <button onClick={handleStart} disabled={loading}>
-        {loading ? "Starting..." : "Start Challenge"}
+      <button onClick={handleStart} disabled={isStarting}>
+        {isStarting ? "Starting..." : "Start Challenge"}
+      </button>
       </button>
     </div>
   );
